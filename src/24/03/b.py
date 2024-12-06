@@ -1,6 +1,5 @@
 from pathlib import Path
 import re
-from functools import reduce
 
 path = Path(__file__).parent / "input.txt"
 txt = "do()" + path.read_text().strip()
