@@ -1,34 +1,43 @@
 from pathlib import Path
 
 path = Path(__file__).parent / "input.txt"
-M0 = path.read_text().strip().splitlines()
-dirs = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
 
-def get_origin():
-    for r in range(len(M0)):
-        for c in range(len(M0[r])):
-            if M0[r][c] == "^":
+def get_origin(M):
+    for r in range(len(M)):
+        for c in range(len(M[0])):
+            if M[r][c] == "^":
                 return r, c
 
 
-def on_edge(r, c):
-    return r in [0, len(M0) - 1] or c in [0, len(M0[0]) - 1]
+rotate = lambda x, y: (y, -x)
+
+in_map = lambda M, x, y: x in range(len(M)) and y in range(len(M[0]))
 
 
-def has_loop(r0, c0, M):
-    r, c = r0, c0
-    i = 0
-    dr, dc = dirs[i]
-    visited = {(r, c): [(dr, dc)]}
+def get_map(M, r, c):
+    _M = [list(row) for row in M]
+    _M[r][c] = "#"
+    return _M
 
-    while not on_edge(r, c):
+
+def gen_path(M, r, c):
+    dr, dc = -1, 0
+    yield r, c, dr, dc
+
+    while in_map(M, r + dr, c + dc):
         if M[r + dr][c + dc] == "#":
-            i = (i + 1) % 4
-            dr, dc = dirs[i]
+            dr, dc = rotate(dr, dc)
+            continue
 
         r, c = r + dr, c + dc
+        yield r, c, dr, dc
 
+
+def contains_loop(M, r, c):
+    visited = {}
+
+    for r, c, dr, dc in gen_path(M, r, c):
         if (dr, dc) in visited.get((r, c), []):
             return True
 
@@ -38,21 +47,17 @@ def has_loop(r0, c0, M):
 
 
 def solution():
-    result = 0
-    count = 0
-    r0, c0 = get_origin()
+    M = path.read_text().strip().splitlines()
+    r0, c0 = get_origin(M)
+    i, count, n = 0, 0, len(M) * len(M[0])
 
-    for r in range(len(M0)):
-        for c in range(len(M0[0])):
-            count += 1
-            print(f"{count / 130 ** 2 * 100}%")
-
-            if M0[r][c] == "#":
+    for x in range(len(M)):
+        for y in range(len(M[0])):
+            i += 1
+            print(f"{i} / {n}")
+            if M[x][y] == "#":
                 continue
 
-            M = [list(row) for row in M0]
-            M[r][c] = "#"
+            count += contains_loop(get_map(M, x, y), r0, c0)
 
-            result += has_loop(r0, c0, M)
-
-    return result
+    return count
