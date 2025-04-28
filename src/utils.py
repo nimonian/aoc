@@ -1,4 +1,5 @@
 from functools import reduce, cache
+from typing import Iterable
 
 
 def compose(*funcs):
@@ -9,7 +10,7 @@ def compose(*funcs):
     return reduce(_compose, funcs, lambda x: x)
 
 
-def prod(L):
+def prod(L: Iterable[float]) -> float:
     return reduce(lambda x, y: x * y, L, 1)
 
 

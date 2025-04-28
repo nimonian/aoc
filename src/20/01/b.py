@@ -10,20 +10,17 @@ def solution():
     parse = compose(sorted, map(int))
     L = parse(txt.read_text().splitlines())
 
-    for k, y in enumerate(L):
-        subtarget = target - 2020
-
-        if subtarget < 0:
-            return
-
+    for k in range(len(L) - 2):
         i, j = k + 1, len(L) - 1
 
         while i < j:
-            n = y + L[i] + L[j]
+            n = L[i] + L[j] + L[k]
 
-            if n == target:
-                return y * L[i] * L[j]
             if n < target:
                 i += 1
-            else:
+
+            elif n > target:
                 j -= 1
+
+            else:
+                return L[i] * L[j] * L[k]

@@ -1,5 +1,5 @@
 from pathlib import Path
-from toolz import compose
+from src.utils import compose
 from toolz.curried import map
 
 txt = Path(__file__).parent / "input.txt"
@@ -15,9 +15,11 @@ def solution():
     while i < j:
         n = L[i] + L[j]
 
-        if n == target:
-            return L[i] * L[j]
         if n < target:
             i += 1
-        else:
+
+        elif n > target:
             j -= 1
+
+        else:
+            return L[i] * L[j]
