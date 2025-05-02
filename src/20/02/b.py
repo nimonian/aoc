@@ -7,8 +7,7 @@ txt = Path(__file__).parent / "input.txt"
 def is_valid(line: str) -> bool:
     match = re.match("(\d+)-(\d+) (\w): (\w+)", line)
     x, y, char, pwd = match.groups()
-    count = (pwd[int(x) - 1] == char) + (pwd[int(y) - 1] == char)
-    return count == 1
+    return (pwd[int(x) - 1] == char) ^ (pwd[int(y) - 1] == char)
 
 
 def solution() -> int:
