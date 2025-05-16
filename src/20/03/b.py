@@ -14,7 +14,6 @@ def count_trees(dr, dc):
         r, c = r + dr, (c + dc) % cols
         count += grid[r][c] == "#"
 
-    print(count)
     return count
 
 
